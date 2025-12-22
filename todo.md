@@ -13,3 +13,7 @@
 - [x] .env.exampleファイルの作成
 - [x] DEPLOYMENT.md手順書の作成
 - [x] package.jsonのビルドスクリプト調整
+
+## Renderビルドパス修正
+- [x] package.jsonのビルド出力パスを修正
+- [x] 起動コマンドのパスを修正
