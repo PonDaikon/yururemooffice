@@ -292,31 +292,41 @@ const RoomContent: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-white/80">マイク設定</label>
-                  <select
-                    value={selectedAudioDevice}
-                    onChange={(e) => setAudioDevice(e.target.value)}
-                    className="w-full bg-white/10 border-white/20 text-white rounded-md h-10 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  >
-                    {audioDevices.map((device) => (
+                <select
+                  value={selectedAudioDevice}
+                  onChange={(e) => setAudioDevice(e.target.value)}
+                  className="w-full bg-white/10 border-white/20 text-white rounded-md h-10 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  disabled={audioDevices.length === 0}
+                >
+                  {audioDevices.length === 0 ? (
+                    <option className="text-black">デバイスが見つかりません。ページをリロードしてください。</option>
+                  ) : (
+                    audioDevices.map((device) => (
                       <option key={device.deviceId} value={device.deviceId} className="text-black">
                         {device.label || `Microphone ${device.deviceId.slice(0, 5)}...`}
                       </option>
-                    ))}
-                  </select>
+                    ))
+                  )}
+                </select>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-white/80">カメラ設定</label>
-                  <select
-                    value={selectedVideoDevice}
-                    onChange={(e) => setVideoDevice(e.target.value)}
-                    className="w-full bg-white/10 border-white/20 text-white rounded-md h-10 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  >
-                    {videoDevices.map((device) => (
+                <select
+                  value={selectedVideoDevice}
+                  onChange={(e) => setVideoDevice(e.target.value)}
+                  className="w-full bg-white/10 border-white/20 text-white rounded-md h-10 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  disabled={videoDevices.length === 0}
+                >
+                  {videoDevices.length === 0 ? (
+                    <option className="text-black">デバイスが見つかりません。ページをリロードしてください。</option>
+                  ) : (
+                    videoDevices.map((device) => (
                       <option key={device.deviceId} value={device.deviceId} className="text-black">
                         {device.label || `Camera ${device.deviceId.slice(0, 5)}...`}
                       </option>
-                    ))}
-                  </select>
+                    ))
+                  )}
+                </select>
                 </div>
               </div>
 
@@ -539,12 +549,17 @@ const RoomContent: React.FC = () => {
                       value={selectedAudioDevice}
                       onChange={(e) => setAudioDevice(e.target.value)}
                       className="w-full bg-white/10 border-white/20 text-white rounded-md h-10 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      disabled={audioDevices.length === 0}
                     >
-                      {audioDevices.map((device) => (
-                        <option key={device.deviceId} value={device.deviceId} className="text-black">
-                          {device.label || `Microphone ${device.deviceId.slice(0, 5)}...`}
-                        </option>
-                      ))}
+                      {audioDevices.length === 0 ? (
+                        <option className="text-black">デバイスが見つかりません。ページをリロードしてください。</option>
+                      ) : (
+                        audioDevices.map((device) => (
+                          <option key={device.deviceId} value={device.deviceId} className="text-black">
+                            {device.label || `Microphone ${device.deviceId.slice(0, 5)}...`}
+                          </option>
+                        ))
+                      )}
                     </select>
                   </div>
                   <div className="space-y-2">
@@ -553,12 +568,17 @@ const RoomContent: React.FC = () => {
                       value={selectedVideoDevice}
                       onChange={(e) => setVideoDevice(e.target.value)}
                       className="w-full bg-white/10 border-white/20 text-white rounded-md h-10 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      disabled={videoDevices.length === 0}
                     >
-                      {videoDevices.map((device) => (
-                        <option key={device.deviceId} value={device.deviceId} className="text-black">
-                          {device.label || `Camera ${device.deviceId.slice(0, 5)}...`}
-                        </option>
-                      ))}
+                      {videoDevices.length === 0 ? (
+                        <option className="text-black">デバイスが見つかりません。ページをリロードしてください。</option>
+                      ) : (
+                        videoDevices.map((device) => (
+                          <option key={device.deviceId} value={device.deviceId} className="text-black">
+                            {device.label || `Camera ${device.deviceId.slice(0, 5)}...`}
+                          </option>
+                        ))
+                      )}
                     </select>
                   </div>
 

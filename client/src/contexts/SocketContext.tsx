@@ -111,6 +111,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     // 1. メディア初期化
     const initMedia = async () => {
       try {
+        // まず許可を取得してストリームを開始
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         originalStreamRef.current = stream;
         setLocalStream(stream);
@@ -119,11 +120,37 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         // VideoProcessorの初期化
         videoProcessorRef.current = new VideoProcessor();
 
+        // 許可取得後、デバイスリストを取得（ラベルが正しく取得できる）
         const devices = await navigator.mediaDevices.enumerateDevices();
-        setAudioDevices(devices.filter(d => d.kind === 'audioinput'));
-        setVideoDevices(devices.filter(d => d.kind === 'videoinput'));
+        const audioInputs = devices.filter(d => d.kind === 'audioinput');
+        const videoInputs = devices.filter(d => d.kind === 'videoinput');
+        
+        setAudioDevices(audioInputs);
+        setVideoDevices(videoInputs);
+
+        // デフォルトデバイスを設定
+        if (audioInputs.length > 0 && !selectedAudioDevice) {
+          setSelectedAudioDevice(audioInputs[0].deviceId);
+        }
+        if (videoInputs.length > 0 && !selectedVideoDevice) {
+          setSelectedVideoDevice(videoInputs[0].deviceId);
+        }
+
+        console.log('[Media] Devices loaded:', { audio: audioInputs.length, video: videoInputs.length });
       } catch (err) {
         console.error("Media access failed, using fallback:", err);
+        
+        // エラーの種類に応じたメッセージ
+        if (err instanceof Error) {
+          if (err.name === 'NotReadableError') {
+            console.error('[Media] デバイスが他のアプリケーションで使用中の可能性があります');
+          } else if (err.name === 'NotAllowedError') {
+            console.error('[Media] カメラ・マイクへのアクセスが拒否されました');
+          } else if (err.name === 'NotFoundError') {
+            console.error('[Media] カメラまたはマイクが見つかりません');
+          }
+        }
+        
         // Fallback: Dummy stream
         const canvas = document.createElement('canvas');
         canvas.width = 640; canvas.height = 480;
@@ -137,6 +164,15 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         
         setLocalStream(stream);
         userStreamRef.current = stream;
+        
+        // フォールバック時もデバイスリストを試行取得
+        try {
+          const devices = await navigator.mediaDevices.enumerateDevices();
+          setAudioDevices(devices.filter(d => d.kind === 'audioinput'));
+          setVideoDevices(devices.filter(d => d.kind === 'videoinput'));
+        } catch (enumErr) {
+          console.error('[Media] デバイスリスト取得失敗:', enumErr);
+        }
       }
     };
     initMedia();

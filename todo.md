@@ -26,3 +26,8 @@
 - [x] server/_core/vite.tsの静的ファイルパスを修正（dist/_core/public → dist/public）
 - [x] render.yamlにOAUTH関連の環境変数を追加（ダミー値）
 - [x] 環境変数の設定方法をDEPLOYMENT.mdに追記
+
+## 初回アクセス時のメディアデバイス選択肢表示バグ修正
+- [x] 許可取得後のデバイスリスト再取得ロジックを追加
+- [x] NotReadableErrorのエラーハンドリング強化
+- [x] デバイス取得失敗時のユーザーへの案内メッセージ追加
