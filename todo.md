@@ -21,3 +21,8 @@
 - [x] esbuildがdevDependenciesに入っているか確認
 - [x] server/socket.tsの存在確認とビルドスクリプト修正
 - [x] ビルドスクリプトの出力確認
+
+## Render静的ファイルパスと環境変数修正
+- [x] server/_core/vite.tsの静的ファイルパスを修正（dist/_core/public → dist/public）
+- [x] render.yamlにOAUTH関連の環境変数を追加（ダミー値）
+- [x] 環境変数の設定方法をDEPLOYMENT.mdに追記

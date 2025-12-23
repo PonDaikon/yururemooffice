@@ -17,6 +17,16 @@ services:
         generateValue: true
       - key: PORT
         value: 10000
+      - key: OAUTH_SERVER_URL
+        value: https://oauth.example.com
+      - key: VITE_OAUTH_PORTAL_URL
+        value: https://oauth.example.com/login
+      - key: VITE_APP_ID
+        value: spatial-chat-app
+      - key: OWNER_OPEN_ID
+        value: owner
+      - key: OWNER_NAME
+        value: Admin
 
 databases:
   # PostgreSQL Database

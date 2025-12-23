@@ -125,11 +125,16 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 | Key | Value |
 |-----|-------|
-| `DATABASE_URL` | データベースの「External Database URL」をコピーして貼り付け |
+| `DATABASE_URL` | データベースの「Internal Database URL」をコピーして貼り付け（Render内部接続用） |
+| `OAUTH_SERVER_URL` | `https://oauth.example.com`（ダミー値、OAuth機能は現在未使用） |
+| `VITE_OAUTH_PORTAL_URL` | `https://oauth.example.com/login`（ダミー値） |
+| `VITE_APP_ID` | `spatial-chat-app`（アプリ識別子） |
+| `OWNER_OPEN_ID` | `owner`（管理者ID） |
+| `OWNER_NAME` | `Admin`（管理者名） |
 
-**External Database URLの取得方法**:
+**Internal Database URLの取得方法**:
 1.  データベース（`yurure-office-db`）のダッシュボードを開く
-2.  「Connections」セクションの「External Database URL」をコピー
+2.  「Connections」セクションの「**Internal Database URL**」をコピー（Render内部接続用）
 
 ### 3-6. デプロイ開始
 
