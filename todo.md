@@ -17,3 +17,7 @@
 ## Renderビルドパス修正
 - [x] package.jsonのビルド出力パスを修正
 - [x] 起動コマンドのパスを修正
+## Renderデプロイ失敗修正（esbuildが実行されない問題）
+- [x] esbuildがdevDependenciesに入っているか確認
+- [x] server/socket.tsの存在確認とビルドスクリプト修正
+- [x] ビルドスクリプトの出力確認
