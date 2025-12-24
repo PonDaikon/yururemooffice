@@ -131,8 +131,8 @@ export const ChatBox: React.FC<ChatBoxProps> = ({ messages, onSendMessage, curre
             </Tabs>
           </div>
           
-          <ScrollArea className="flex-1 p-4">
-            <div className="space-y-4">
+          <ScrollArea className="flex-1 p-4 h-full">
+            <div className="space-y-4 min-h-full">
               {filteredMessages.length === 0 && (
                 <div className="text-center text-white/30 text-xs py-10">
                   メッセージ機能は現在実装準備中です！！

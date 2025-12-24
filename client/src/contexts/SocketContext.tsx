@@ -527,8 +527,92 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     socket.emit('screen-share-size', { width, height });
   };
   const sendReaction = (emoji: string) => {};
-  const setAudioDevice = (id: string) => {};
-  const setVideoDevice = (id: string) => {};
+  
+  const setAudioDevice = async (deviceId: string) => {
+    try {
+      setSelectedAudioDevice(deviceId);
+      
+      // 新しいオーディオデバイスでストリームを再取得
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { deviceId: { exact: deviceId } },
+        video: selectedVideoDevice ? { deviceId: { exact: selectedVideoDevice } } : true
+      });
+      
+      // 古いストリームを停止
+      if (originalStreamRef.current) {
+        originalStreamRef.current.getTracks().forEach(track => track.stop());
+      }
+      
+      originalStreamRef.current = stream;
+      
+      // VideoProcessorのエフェクトが有効なら再適用
+      if (videoProcessorRef.current && videoProcessorRef.current.getEffect() !== 'none') {
+        const processedStream = await videoProcessorRef.current.start(stream);
+        setLocalStream(processedStream);
+        userStreamRef.current = processedStream;
+      } else {
+        setLocalStream(stream);
+        userStreamRef.current = stream;
+      }
+      
+      // ピア接続のストリームを更新
+      peersRef.current.forEach(({ peer }) => {
+        if (userStreamRef.current) {
+          const audioTrack = userStreamRef.current.getAudioTracks()[0];
+          if (audioTrack) {
+            peer.replaceTrack(peer.streams[0].getAudioTracks()[0], audioTrack, peer.streams[0]);
+          }
+        }
+      });
+      
+      console.log('[Media] Audio device changed:', deviceId);
+    } catch (err) {
+      console.error('[Media] Failed to change audio device:', err);
+    }
+  };
+  
+  const setVideoDevice = async (deviceId: string) => {
+    try {
+      setSelectedVideoDevice(deviceId);
+      
+      // 新しいビデオデバイスでストリームを再取得
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: selectedAudioDevice ? { deviceId: { exact: selectedAudioDevice } } : true,
+        video: { deviceId: { exact: deviceId } }
+      });
+      
+      // 古いストリームを停止
+      if (originalStreamRef.current) {
+        originalStreamRef.current.getTracks().forEach(track => track.stop());
+      }
+      
+      originalStreamRef.current = stream;
+      
+      // VideoProcessorのエフェクトが有効なら再適用
+      if (videoProcessorRef.current && videoProcessorRef.current.getEffect() !== 'none') {
+        const processedStream = await videoProcessorRef.current.start(stream);
+        setLocalStream(processedStream);
+        userStreamRef.current = processedStream;
+      } else {
+        setLocalStream(stream);
+        userStreamRef.current = stream;
+      }
+      
+      // ピア接続のストリームを更新
+      peersRef.current.forEach(({ peer }) => {
+        if (userStreamRef.current) {
+          const videoTrack = userStreamRef.current.getVideoTracks()[0];
+          if (videoTrack) {
+            peer.replaceTrack(peer.streams[0].getVideoTracks()[0], videoTrack, peer.streams[0]);
+          }
+        }
+      });
+      
+      console.log('[Media] Video device changed:', deviceId);
+    } catch (err) {
+      console.error('[Media] Failed to change video device:', err);
+    }
+  };
 
   const setVideoEffect = async (effect: VideoEffect) => {
     if (!videoProcessorRef.current || !originalStreamRef.current) return;
