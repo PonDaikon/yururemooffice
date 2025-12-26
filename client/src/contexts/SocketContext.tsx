@@ -557,10 +557,15 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       
       // ピア接続のストリームを更新
       peersRef.current.forEach(({ peer }) => {
-        if (userStreamRef.current) {
-          const audioTrack = userStreamRef.current.getAudioTracks()[0];
-          if (audioTrack) {
-            peer.replaceTrack(peer.streams[0].getAudioTracks()[0], audioTrack, peer.streams[0]);
+        if (userStreamRef.current && peer.streams && peer.streams[0]) {
+          const oldAudioTrack = peer.streams[0].getAudioTracks()[0];
+          const newAudioTrack = userStreamRef.current.getAudioTracks()[0];
+          if (oldAudioTrack && newAudioTrack) {
+            try {
+              peer.replaceTrack(oldAudioTrack, newAudioTrack, peer.streams[0]);
+            } catch (replaceErr) {
+              console.warn('[Media] Failed to replace audio track for peer:', replaceErr);
+            }
           }
         }
       });
@@ -600,10 +605,15 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       
       // ピア接続のストリームを更新
       peersRef.current.forEach(({ peer }) => {
-        if (userStreamRef.current) {
-          const videoTrack = userStreamRef.current.getVideoTracks()[0];
-          if (videoTrack) {
-            peer.replaceTrack(peer.streams[0].getVideoTracks()[0], videoTrack, peer.streams[0]);
+        if (userStreamRef.current && peer.streams && peer.streams[0]) {
+          const oldVideoTrack = peer.streams[0].getVideoTracks()[0];
+          const newVideoTrack = userStreamRef.current.getVideoTracks()[0];
+          if (oldVideoTrack && newVideoTrack) {
+            try {
+              peer.replaceTrack(oldVideoTrack, newVideoTrack, peer.streams[0]);
+            } catch (replaceErr) {
+              console.warn('[Media] Failed to replace video track for peer:', replaceErr);
+            }
           }
         }
       });
